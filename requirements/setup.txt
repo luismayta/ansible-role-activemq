@@ -3,7 +3,7 @@ autoenv==1.0.0
 autopep8
 bumplus==0.0.8
 bumpversion==0.5.3
-docker-compose==1.13.0
+docker-compose==1.14.0
 elpy==1.15.0
 epc==0.0.5
 flake8==3.3.0
