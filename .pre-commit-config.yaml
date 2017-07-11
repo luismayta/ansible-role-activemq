@@ -1,0 +1,64 @@
+-   repo: git@github.com:pre-commit/pre-commit-hooks
+    sha: 286962eeb7af67f321b94a22e8edbd3004b1810e
+    hooks:
+    -   id: detect-private-key
+        files: ^(?!\.?git-crypt)
+    -   id: check-merge-conflict
+    -   id: trailing-whitespace
+        language_version: python3
+        files: ^tf|-|\.(py|tfvars|tf|tfenv|env|yml|yaml|pem|key|mock)$
+    -   id: end-of-file-fixer
+        files: ^tf|-|\.(py|tfvars|tf|tfenv|env|yml|yaml|pem|key|mock)$
+        language_version: python3
+    -   id: check-added-large-files
+        files: ^tf|-|\.(py|env|yml|yaml)$
+    -   id: check-case-conflict
+    -   id: check-json
+        language_version: python3
+    -   id: check-xml
+        language_version: python3
+    -   id: check-yaml
+        language_version: python3
+    -   id: check-case-conflict
+    -   id: check-ast
+        language_version: python3
+    -   id: debug-statements
+    -   id: autopep8-wrapper
+        args:
+        - -i
+        - --ignore=E501
+        language_version: python3
+    -   id: double-quote-string-fixer
+    -   id: check-docstring-first
+    -   id: pretty-format-json
+    -   id: debug-statements
+    -   id: requirements-txt-fixer
+    -   id: name-tests-test
+-   repo: git://github.com/pre-commit/mirrors-pylint
+    sha: v1.7.2
+    hooks:
+    -   id: pylint
+        language_version: python3
+        args:
+        - --rcfile=.pylintrc
+        exclude: setup.py
+-   repo: git://github.com/pre-commit/mirrors-scss-lint
+    sha: v0.54.0
+    hooks:
+    -   id: scss-lint
+        files: \.(scss)$
+-   repo: git@github.com:pre-commit/pre-commit
+    sha: 1a07a24d13823d00a46a2536f9b9484596989f61
+    hooks:
+    -   id: validate_config
+    -   id: validate_manifest
+-   repo: git://github.com/FalconSocial/pre-commit-python-sorter
+    sha: b57843b0b874df1d16eb0bef00b868792cb245c2
+    hooks:
+    -   id: python-import-sorter
+        args:
+        - --silent-overwrite
+-   repo: git://github.com/detailyang/pre-commit-shell
+    sha: 75af325c913743d7abf2ff6fd71dfbf9490bd8b4
+    hooks:
+    -   id: shell-lint
