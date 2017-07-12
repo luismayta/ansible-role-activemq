@@ -1,2 +1,57 @@
 ---
 # task for hadenlabs.activemq
+
+- name: "determin if to use systemd or not (for centos 6 support)"
+  stat:
+    path: /etc/systemd
+  register: systemd
+
+- debug: var=systemd.stat
+
+- name: "set fact if systemd is available"
+  set_fact:
+    activemq_systemd: true
+  when: systemd.stat.exists
+
+- name: "Add Activemq group"
+  group:
+    name: "{{ activemq_group }}"
+  tags:
+    - init
+    - group
+
+- name: "Add Activemq user"
+  user:
+    name: "{{ activemq_user }}"
+    group: "{{ activemq_group }}"
+    home: "{{ activemq_home_dir }}"
+    comment: "ActiveMQ service account"
+    createhome: no
+    state: present
+    system: yes
+  tags:
+    - init
+    - user
+
+- name: "Create requires directories [home/log etc etc]"
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0755
+    owner: "{{ activemq_user }}"
+    group: "{{ activemq_group }}"
+  with_items:
+  - "{{ activemq_home_dir }}"
+  - "{{ activemq_log_dir }}"
+
+- name: "Get tarball"
+  get_url:
+    url: "{{ activemq_url }}"
+    dest: "/tmp/apache-activemq-{{ activemq_version }}-bin.tar.gz"
+    owner: "{{ activemq_user }}"
+    group: "{{ activemq_group }}"
+  when:
+    - activemq_skip_checksum
+    - activemq_checksum is not defined
+  tags:
+    - getbin
