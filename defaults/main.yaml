@@ -1,6 +1,12 @@
 ---
 # defaults file for hadenlabs.activemq
-
+activemq_stomp_port: 61613
+activemq_openwire_port: 61616
+activemq_user_login: 'user'
+activemq_user_password: 'secret'
+activemq_fqdn: 'broker.example.com'
+activemq_admin_user: 'admin'
+activemq_admin_password: 'secret'
 activemq_user: activemq
 activemq_group:  activemq
 activemq_install_dir: /opt
