@@ -1,0 +1,9 @@
+---
+# task for hadenlabs.activemq
+
+- name: copy templates
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items: _activemq.templates
+  when: _activemq.templates is defined

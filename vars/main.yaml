@@ -1,0 +1,14 @@
+---
+# vars file for hadenlabs.activemq
+
+# _hadenlabs.activemq_create_files:
+
+#   - path: "{{ _path_dir }}"
+#     state: "directory"
+#     # group: "root"
+#     owner: "{{ user }}"
+
+# _hadenlabs.activemq:
+#   templates:
+#     - src: "default.j2"
+#       dest: {{ _hadenlabs.activemq_file }}
