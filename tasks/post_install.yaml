@@ -1,2 +1,4 @@
 ---
 # task for hadenlabs.activemq
+
+- service: name=activemq enabled=yes state=started

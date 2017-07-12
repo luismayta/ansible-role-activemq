@@ -1,13 +1,47 @@
 ---
 # task for hadenlabs.activemq
 
-- include: install.d/CentOS.yaml
-  when: ansible_os_family == "Redhat"
-  tags:
-    - activemq
+- name: "Extract tarball" # see: https://github.com/ansible/ansible/issues/16078
+  command: tar zxvf /tmp/apache-activemq-{{ activemq_version }}-bin.tar.gz --directory /opt/
 
-- include: install.d/Ubuntu.yaml
-  when:
-    - ansible_os_family == "Debian"
+- name: "Become didn't work ... so chown it is ..."
+  command: chown "{{ activemq_user }}"."{{ activemq_user }}" /opt/apache-activemq-"{{ activemq_version }}" -R
   tags:
-    - activemq
+    - chown
+
+# when we upgrade activemq we might want to keep the older versions copy for just in case ...
+- name: "Create link activemq to /opt/activemq"
+  file: src="{{ activemq_install_dir }}/apache-activemq-{{ activemq_version }}"
+        dest="{{ activemq_install_dir }}/activemq"
+        state=link
+        owner="{{ activemq_user }}"
+        group="{{ activemq_group }}"
+        #force=true
+  tags:
+    - link
+
+- name: "Create init sctipt link file"
+  file:
+    src: "{{ activemq_install_dir }}/activemq/bin/linux-x86-{{ ansible_userspace_bits }}/activemq"
+    dest: "/etc/init.d/activemq"
+    owner: root
+    group: root
+    state: link
+  when: activemq_systemd is not defined
+
+- name: "Create init sctipt link file"
+  file:
+    src: "{{ activemq_install_dir }}/activemq/bin/linux-x86-{{ ansible_userspace_bits }}/activemq"
+    dest: "/etc/init.d/activemq"
+    owner: root
+    group: root
+    state: link
+  when: activemq_systemd is not defined
+
+- name: "Generate empty log file ..."
+  file:
+    path: "{{ activemq_log_dir }}"
+    state: touch
+    mode: "u=rw,g=r,o=r"
+    owner: root
+    group: root
