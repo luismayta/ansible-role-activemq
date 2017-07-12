@@ -16,3 +16,9 @@
     owner: root
     group: root
   when: activemq_systemd is defined
+
+- name: Configure ActiveMQ activemq.xml
+  template: src=activemq.xml.j2
+            dest=/etc/activemq/activemq.xml
+  notify:
+    - restart activemq
