@@ -1,2 +1,28 @@
 ---
 # defaults file for hadenlabs.activemq
+
+activemq_user: activemq
+activemq_group:  activemq
+activemq_install_dir: /opt
+activemq_run_dir: "/opt/{{ activemq_user }}"
+activemq_home_dir:  /var/lib/activemq
+activemq_log_dir: /var/log/activemq
+
+# default installation mode
+activemq_install_mode: tarball
+activemq_skip_checksum: true
+# example url :: http://archive.apache.org/dist/activemq/5.10.0/apache-activemq-5.10.0-bin.tar.gz
+activemq_url_prefix: "http://archive.apache.org/dist/activemq/"
+
+# calculate version
+activemq_version_major: "5"
+activemq_version_minor: "13"
+activemq_version_patch: "3"
+
+activemq_version: "{{ activemq_version_major }}.{{ activemq_version_minor }}.{{ activemq_version_patch }}"
+
+# Let's put all supported versions chacksum here in order to validate them if they appear
+activemq_checksums:
+  - { version: "5.10.0", checksum: "md5:3005575267b0005c2eeb32a23a945e39" }
+
+activemq_url: "{{ activemq_url_prefix }}/{{ activemq_version }}/apache-activemq-{{ activemq_version }}-bin.tar.gz"
