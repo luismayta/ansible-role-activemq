@@ -13,6 +13,40 @@
     </bean>
 
     <broker xmlns="http://activemq.apache.org/schema/core" brokerName="{{ activemq_instance_name }}" dataDirectory="${activemq.data}">
+        <plugins>
+            <simpleAuthenticationPlugin>
+              <users>
+                <authenticationUser username="{{ activemq_admin_user }}" password="{{ activemq_admin_password }}" groups="admins"/>
+
+            {% if activemq_authentication %}
+              {% for item in activemq_authentication %}
+                <authenticationUser username="{{ item.username }}" password="{{ item.password }}" groups="{{ item.groups }}"/>
+              {% endfor %}
+            {% endif %}
+
+              </users>
+            </simpleAuthenticationPlugin>
+            <authorizationPlugin>
+              <map>
+                <authorizationMap>
+                  <authorizationEntries>
+                    <authorizationEntry queue=">" write="admins" read="admins" admin="admins" />
+                    <authorizationEntry topic=">" write="admins" read="admins" admin="admins" />
+                {% if activemq_authorization_queue is defined %}
+                  {% for item in activemq_authorization_queue %}
+                      <authorizationEntry queue="{{ item.queue }}" write="{{ item.write }}" read="{{ item.read }}" />
+                  {% endfor %}
+                {% endif %}
+                {% if activemq_authorization_topic is defined %}
+                  {% for item in activemq_authorization_topic %}
+                      <authorizationEntry topic="{{ item.topic }}" write="{{ item.write }}" read="{{ item.read }}" admin="{{ item.admin }}" />
+                  {% endfor %}
+                {% endif %}
+                  </authorizationEntries>
+                </authorizationMap>
+              </map>
+            </authorizationPlugin>
+        </plugins>
         <destinationPolicy>
             <policyMap>
               <policyEntries>

@@ -5,6 +5,24 @@ activemq_instance_name: activemq
 # defaults file for hadenlabs.activemq
 activemq_admin_user: 'admin'
 activemq_admin_password: 'secret'
+
+activemq_authentication:
+  - username: 'jensen'
+    password: 'jensen'
+    groups: 'jrole'
+
+activemq_authorization_queue:
+  - queue: 'test'
+    write: 'jrole'
+    read: 'jrole'
+    # admin: 'jrole'
+
+# activemq_authorization_topic:
+#   - topic: ''
+#     write: ''
+#     read: ''
+#     admin: ''
+
 activemq_user: activemq
 activemq_group:  activemq
 
@@ -45,3 +63,10 @@ activemq_custom_xml_config_path: 'activemq.xml.j2'
 
 # jetty settings
 activemq_webconsole_port: 8161
+activemq_webconsole_users:
+  - username: admin
+    password: admin
+    group: admin
+  - username: user
+    password: user
+    group: user
