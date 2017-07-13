@@ -1,22 +1,20 @@
 ---
+
+activemq_instance_name: activemq
+
 # defaults file for hadenlabs.activemq
-activemq_stomp_port: 61613
-activemq_openwire_port: 61616
-activemq_user_login: 'user'
-activemq_user_password: 'secret'
-activemq_fqdn: 'broker.example.com'
 activemq_admin_user: 'admin'
 activemq_admin_password: 'secret'
 activemq_user: activemq
 activemq_group:  activemq
-activemq_install_dir: /opt
+
+# installation directory
+activemq_install_dir: '/opt/activemq'
+
 activemq_run_dir: "/opt/{{ activemq_user }}"
 activemq_home_dir:  /var/lib/activemq
 activemq_log_dir: /var/log/activemq
 
-# default installation mode
-activemq_install_mode: tarball
-activemq_skip_checksum: true
 # example url :: http://archive.apache.org/dist/activemq/5.10.0/apache-activemq-5.10.0-bin.tar.gz
 activemq_url_prefix: "http://archive.apache.org/dist/activemq/"
 
@@ -27,8 +25,23 @@ activemq_version_patch: "3"
 
 activemq_version: "{{ activemq_version_major }}.{{ activemq_version_minor }}.{{ activemq_version_patch }}"
 
-# Let's put all supported versions chacksum here in order to validate them if they appear
-activemq_checksums:
-  - { version: "5.10.0", checksum: "md5:3005575267b0005c2eeb32a23a945e39" }
-
 activemq_url: "{{ activemq_url_prefix }}/{{ activemq_version }}/apache-activemq-{{ activemq_version }}-bin.tar.gz"
+
+# activemq enviroment variables
+activemq_opts_memory: '-Xms1G -Xmx1G'
+activemq_conf_dir: '{{ activemq_install_dir }}/conf'
+activemq_data_dir: '/var/lib/activemq/data'
+activemq_tmp_dir: '{{ activemq_install_dir }}/tmp'
+
+# activemq broker config
+activemq_openwire_transport_connector_uri: 'tcp://0.0.0.0:61616?maximumConnections=1000&amp;wireformat.maxFrameSize=104857600'
+activemq_activemqp_transport_connector_uri: 'amqp://0.0.0.0:5672?maximumConnections=1000&amp;wireformat.maxFrameSize=104857600'
+activemq_stomp_transport_connector_uri: 'stomp://0.0.0.0:61713?transport.closeAsync=false'
+activemq_stomp_and_nio_transport_connector_uri: 'stomp+nio://0.0.0.0:61712?transport.closeAsync=false'
+
+# Use custom broker xml config
+activemq_custom_xml_config: True
+activemq_custom_xml_config_path: 'activemq.xml.j2'
+
+# jetty settings
+activemq_webconsole_port: 8161
