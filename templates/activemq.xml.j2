@@ -34,7 +34,7 @@
                     <authorizationEntry topic=">" write="admins" read="admins" admin="admins" />
                 {% if activemq_authorization_queue is defined %}
                   {% for item in activemq_authorization_queue %}
-                      <authorizationEntry queue="{{ item.queue }}" write="{{ item.write }}" read="{{ item.read }}" />
+                      <authorizationEntry queue="{{ item.queue }}" write="{{ item.write }}" read="{{ item.read }}" admin="{{ item.admin }}" />
                   {% endfor %}
                 {% endif %}
                 {% if activemq_authorization_topic is defined %}
