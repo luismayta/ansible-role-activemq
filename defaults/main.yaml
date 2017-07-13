@@ -63,3 +63,10 @@ activemq_custom_xml_config_path: 'activemq.xml.j2'
 
 # jetty settings
 activemq_webconsole_port: 8161
+activemq_webconsole_users:
+  - username: admin
+    password: admin
+    group: admin
+  - username: user
+    password: user
+    group: user
