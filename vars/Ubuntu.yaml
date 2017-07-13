@@ -6,4 +6,4 @@ _activemq_package_dependencies:
 
 
 _activemq_packages:
-  - packages
+  - activemq
