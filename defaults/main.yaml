@@ -9,12 +9,12 @@ activemq_admin_password: 'secret'
 activemq_authentication:
   - username: 'jensen'
     password: 'jensen'
-    groups: 'jrole'
+    groups: 'jensen'
 
 activemq_authorization_queue:
   - queue: 'test'
-    write: 'jrole'
-    read: 'jrole'
+    write: 'jensen'
+    read: 'jensen'
     # admin: 'jrole'
 
 # activemq_authorization_topic:
