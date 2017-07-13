@@ -48,6 +48,14 @@
   notify:
     - restart activemq
 
+- name: Set Web Console users
+  template:
+    src: 'jetty-realm.properties.j2'
+    dest: '{{ activemq_conf_dir }}/jetty-realm.properties'
+    owner: '{{ activemq_user }}'
+    group: "{{ activemq_group }}"
+    mode: 0644
+
 - name: Change path to store log file
   lineinfile:
     dest: '{{ activemq_conf_dir }}/log4j.properties'
