@@ -1,0 +1,12 @@
+---
+# environment file for hadenlabs.activemq
+
+- name: Create files activemq
+  sudo: yes
+  file:
+    path: "{{ item.path }}"
+    state: "{{ item.state }}"
+    owner: "{{ item.owner }}"
+  with_items: _activemq_create_files
+  when:
+    - _activemq_create_files is defined

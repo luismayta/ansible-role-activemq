@@ -1,0 +1,26 @@
+---
+
+# task file for hadenlabs.activemq
+
+- name: Update package repositories
+  sudo: yes
+  apt:
+    update_cache: True
+  when:
+    - ansible_os_family == "Debian"
+  tags:
+    - apt
+    - update_cache
+
+- name: Install activemq package dependencies
+  become: yes
+  package:
+    name: "{{ item }}"
+    state: present
+  register: install_activemq_package_dependencies
+  when:
+    - _activemq_package_dependencies is defined
+  with_items: "{{ _activemq_package_dependencies | default([]) }}"
+  tags:
+    - packages
+    - dependencies
