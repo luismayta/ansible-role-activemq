@@ -1,0 +1,8 @@
+---
+# vars file for hadenlabs.activemq (CentOS specific)
+
+_activemq_package_dependencies:
+  - build-essential
+
+_activemq_packages:
+  - packages

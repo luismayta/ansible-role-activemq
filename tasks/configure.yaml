@@ -1,0 +1,37 @@
+---
+# task for hadenlabs.activemq
+
+- name: "Add Activemq group"
+  group:
+    name: "{{ activemq_group }}"
+    state: present
+  tags:
+    - init
+    - group
+
+- name: "Add Activemq user"
+  user:
+    name: "{{ activemq_user }}"
+    group: "{{ activemq_group }}"
+    home: "{{ activemq_home_dir }}"
+    comment: "ActiveMQ service account"
+    createhome: no
+    state: present
+    system: yes
+  tags:
+    - init
+    - user
+
+- name: Create directories
+  file:
+    path: '{{ item.path }}'
+    state: directory
+    owner: '{{ activemq_user }}'
+    group: '{{ activemq_group }}'
+    mode: '{{ item.mode }}'
+  with_items:
+    - { path: '{{ activemq_install_dir }}', mode: '0775' }
+    - { path: '{{ activemq_data_dir }}', mode: 'u=rwx,g=rx,o=x' }
+    - { path: '{{ activemq_conf_dir }}', mode: '0775' }
+    - { path: '{{ activemq_tmp_dir }}', mode: '0775' }
+    - { path: '/var/log/{{ activemq_instance_name }}', mode: '0755' }

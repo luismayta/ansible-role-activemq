@@ -1,0 +1,72 @@
+---
+# task for hadenlabs.activemq
+
+- name: Download and unarchive activemq
+  unarchive:
+    src:   '{{ activemq_url }}'
+    dest:  '{{ activemq_install_dir }}'
+    owner: "{{ activemq_user }}"
+    group: "{{ activemq_group }}"
+    extra_opts: ['--strip-components=1']
+    copy: no
+
+- name: Copy env configuration file
+  template:
+    src: activemq-env.j2
+    dest: /etc/default/{{ activemq_instance_name }}
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart activemq
+
+- name: Copy activemq.xml config file
+  template:
+    src: activemq.xml.j2
+    dest: '{{ activemq_conf_dir }}/activemq.xml'
+    owner: '{{ activemq_user }}'
+    group: "{{ activemq_group }}"
+    mode: 0644
+  when:
+    - activemq_custom_xml_config == False
+
+- name: Copy custom activemq.xml config file
+  template:
+    src: '{{ activemq_custom_xml_config_path }}'
+    dest: '{{ activemq_conf_dir }}/activemq.xml'
+    owner: '{{ activemq_user }}'
+    group: "{{ activemq_group }}"
+    mode: 0644
+  when:
+    - activemq_custom_xml_config == True
+
+- name: Set Web Console Port
+  replace:
+    dest: '{{ activemq_conf_dir }}/jetty.xml'
+    regexp: '<property name="port" value="\d+"'
+    replace: '<property name="port" value="{{ activemq_webconsole_port }}"'
+  notify:
+    - restart activemq
+
+- name: Set Web Console users
+  template:
+    src: 'jetty-realm.properties.j2'
+    dest: '{{ activemq_conf_dir }}/jetty-realm.properties'
+    owner: '{{ activemq_user }}'
+    group: "{{ activemq_group }}"
+    mode: 0644
+
+- name: Change path to store log file
+  lineinfile:
+    dest: '{{ activemq_conf_dir }}/log4j.properties'
+    regexp: '^log4j.appender.logfile.file='
+    line: 'log4j.appender.logfile.file=/var/log/{{ activemq_instance_name }}/activemq.log'
+    state: present
+  notify:
+    - restart activemq
+
+- name: Symlink init script
+  file:
+    src: '{{ activemq_install_dir }}/bin/activemq'
+    dest: '/etc/init.d/{{ activemq_instance_name }}'
+    state: link

@@ -1,0 +1,9 @@
+# handlers for hadenlabs.activemq
+- name: start activemq
+  service: name=activemq state=started
+
+- name: stop activemq
+  service: name=activemq state=stopped
+
+- name: restart activemq
+  service: name=activemq state=restarted
