@@ -1,5 +1,11 @@
 ---
 # task for hadenlabs.activemq
 
-- name: Start and Enable ActiveMQ
-  service: name=activemq state=started enabled=yes
+- name: Update rc.d defaults
+  shell: 'update-rc.d {{ activemq_instance_name }} defaults'
+
+- name: Ensure activemq service is running
+  service:
+    name: '{{ activemq_instance_name }}'
+    state: started
+    enabled: yes

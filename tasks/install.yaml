@@ -1,47 +1,64 @@
 ---
 # task for hadenlabs.activemq
 
-- name: "Extract tarball" # see: https://github.com/ansible/ansible/issues/16078
-  command: tar zxvf /tmp/apache-activemq-{{ activemq_version }}-bin.tar.gz --directory /opt/
+- name: Download and unarchive activemq
+  unarchive:
+    src:   '{{ activemq_url }}'
+    dest:  '{{ activemq_install_dir }}'
+    owner: "{{ activemq_user }}"
+    group: "{{ activemq_group }}"
+    extra_opts: ['--strip-components=1']
+    copy: no
 
-- name: "Become didn't work ... so chown it is ..."
-  command: chown "{{ activemq_user }}"."{{ activemq_user }}" /opt/apache-activemq-"{{ activemq_version }}" -R
-  tags:
-    - chown
-
-# when we upgrade activemq we might want to keep the older versions copy for just in case ...
-- name: "Create link activemq to /opt/activemq"
-  file: src="{{ activemq_install_dir }}/apache-activemq-{{ activemq_version }}"
-        dest="{{ activemq_install_dir }}/activemq"
-        state=link
-        owner="{{ activemq_user }}"
-        group="{{ activemq_group }}"
-        #force=true
-  tags:
-    - link
-
-- name: "Create init sctipt link file"
-  file:
-    src: "{{ activemq_install_dir }}/activemq/bin/linux-x86-{{ ansible_userspace_bits }}/activemq"
-    dest: "/etc/init.d/activemq"
+- name: Copy env configuration file
+  template:
+    src: activemq-env.j2
+    dest: /etc/default/{{ activemq_instance_name }}
     owner: root
     group: root
+    mode: 0644
+  notify:
+    - restart activemq
+
+- name: Copy activemq.xml config file
+  template:
+    src: activemq.xml.j2
+    dest: '{{ activemq_conf_dir }}/activemq.xml'
+    owner: '{{ activemq_user }}'
+    group: "{{ activemq_group }}"
+    mode: 0644
+  when:
+    - activemq_custom_xml_config == False
+
+- name: Copy custom activemq.xml config file
+  template:
+    src: '{{ activemq_custom_xml_config_path }}'
+    dest: '{{ activemq_conf_dir }}/activemq.xml'
+    owner: '{{ activemq_user }}'
+    group: "{{ activemq_group }}"
+    mode: 0644
+  when:
+    - activemq_custom_xml_config == True
+
+- name: Set Web Console Port
+  replace:
+    dest: '{{ activemq_conf_dir }}/jetty.xml'
+    regexp: '<property name="port" value="\d+"'
+    replace: '<property name="port" value="{{ activemq_webconsole_port }}"'
+  notify:
+    - restart activemq
+
+- name: Change path to store log file
+  lineinfile:
+    dest: '{{ activemq_conf_dir }}/log4j.properties'
+    regexp: '^log4j.appender.logfile.file='
+    line: 'log4j.appender.logfile.file=/var/log/{{ activemq_instance_name }}/activemq.log'
+    state: present
+  notify:
+    - restart activemq
+
+- name: Symlink init script
+  file:
+    src: '{{ activemq_install_dir }}/bin/activemq'
+    dest: '/etc/init.d/{{ activemq_instance_name }}'
     state: link
-  when: activemq_systemd is not defined
-
-- name: "Create init sctipt link file"
-  file:
-    src: "{{ activemq_install_dir }}/activemq/bin/linux-x86-{{ ansible_userspace_bits }}/activemq"
-    dest: "/etc/init.d/activemq"
-    owner: root
-    group: root
-    state: link
-  when: activemq_systemd is not defined
-
-- name: "Generate empty log file ..."
-  file:
-    path: "{{ activemq_log_dir }}"
-    state: touch
-    mode: "u=rw,g=r,o=r"
-    owner: root
-    group: root
