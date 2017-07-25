@@ -1,5 +1,5 @@
 ---
-# environment file for hadenlabs.activemq
+# environment file for labpositiva.activemq
 
 - name: Create files activemq
   sudo: yes
