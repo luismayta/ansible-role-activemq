@@ -1,5 +1,5 @@
 ---
-# task for hadenlabs.activemq
+# task for labpositiva.activemq
 
 - name: Install packages via pip activemq
   become: yes

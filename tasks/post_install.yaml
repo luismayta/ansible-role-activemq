@@ -1,5 +1,5 @@
 ---
-# task for hadenlabs.activemq
+# task for labpositiva.activemq
 
 - name: Update rc.d defaults
   shell: 'update-rc.d {{ activemq_instance_name }} defaults'

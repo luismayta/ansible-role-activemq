@@ -2,7 +2,7 @@
 
 activemq_instance_name: activemq
 
-# defaults file for hadenlabs.activemq
+# defaults file for labpositiva.activemq
 activemq_admin_user: 'admin'
 activemq_admin_password: 'secret'
 
