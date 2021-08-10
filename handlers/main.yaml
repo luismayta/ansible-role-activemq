@@ -1,4 +1,4 @@
-# handlers for labpositiva.activemq
+# handlers for hadenlabs.activemq
 - name: start activemq
   service: name=activemq state=started
 

@@ -1,6 +1,6 @@
 ---
 
-# task for labpositiva.activemq
+# task for hadenlabs.activemq
 
 - name: include os specific variables
   include_vars: "{{ item }}"

@@ -3,7 +3,7 @@
 galaxy_info:
   author: Luis Mayta
   description: role for ansible
-  company: labpositiva
+  company: hadenlabs
   version: 0.0.3
   license: Mit
   min_ansible_version: 2.0.0

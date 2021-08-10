@@ -1,6 +1,6 @@
 ---
 
-# task file for labpositiva.activemq
+# task file for hadenlabs.activemq
 
 - name: Update package repositories
   sudo: yes

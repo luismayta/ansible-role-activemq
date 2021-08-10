@@ -1,5 +1,5 @@
 ---
-# vars file for labpositiva.activemq (CentOS specific)
+# vars file for hadenlabs.activemq (CentOS specific)
 
 _activemq_package_dependencies:
   - build-essential

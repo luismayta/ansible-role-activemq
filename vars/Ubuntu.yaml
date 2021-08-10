@@ -1,5 +1,5 @@
 ---
-# vars file for labpositiva.activemq (Ubuntu specific)
+# vars file for hadenlabs.activemq (Ubuntu specific)
 
 _activemq_package_dependencies:
   - build-essential

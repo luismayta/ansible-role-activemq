@@ -4,4 +4,4 @@
   vars:
     example_var: {'key': 'value'}
   roles:
-    - { role: labpositiva.activemq  }
+    - { role: hadenlabs.activemq  }

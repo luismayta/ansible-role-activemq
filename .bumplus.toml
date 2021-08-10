@@ -13,9 +13,9 @@ replace = """
 
 [[files."CHANGELOG.md"]]
 search = """
-[Unreleased]: https://github.com/labpositiva/ansible-role-activemq/compare/{{old_version}}...HEAD
+[Unreleased]: https://github.com/hadenlabs/ansible-role-activemq/compare/{{old_version}}...HEAD
 """
 replace = """
-[Unreleased]: https://github.com/labpositiva/ansible-role-activemq/compare/{{new_version}}...HEAD
-[{{new_version}}]: https://github.com/labpositiva/ansible-role-activemq/compare/{{old_version}}...{{new_version}}
+[Unreleased]: https://github.com/hadenlabs/ansible-role-activemq/compare/{{new_version}}...HEAD
+[{{new_version}}]: https://github.com/hadenlabs/ansible-role-activemq/compare/{{old_version}}...{{new_version}}
 """
