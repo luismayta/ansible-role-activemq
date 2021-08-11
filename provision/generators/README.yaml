@@ -1,0 +1,48 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: ansible-role-activemq
+
+email:
+  support: support@hadenlabs.com
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: 'LGPL-3.0'
+
+# Canonical GitHub repo
+github_repo: hadenlabs/ansible-role-activemq
+
+# Badges to display
+badges:
+  - name: Latest Release
+    image: https://img.shields.io/github/release/hadenlabs/ansible-role-activemq
+    url: https://github.com/hadenlabs/ansible-role-activemq/releases
+  - name: Lint
+    image: https://img.shields.io/github/workflow/status/hadenlabs/ansible-role-activemq/lint-code
+    url: https://github.com/hadenlabs/ansible-role-activemq/actions?workflow=lint-code
+  - name: pre-commit
+    image: https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white
+    url: https://github.com/pre-commit/pre-commit
+  - name: Conventional Commits
+    image: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow
+    url: https://conventionalcommits.org
+  - name: KeepAChangelog
+    image: https://img.shields.io/badge/Keep%20A%20Changelog-1.0.0-%23E05735
+    url: https://keepachangelog.com
+
+description: |-
+
+  ansible-role-activemq for project
+
+  ### Replace name project to New Project
+
+  ```bash
+    agr 'ansible-role-activemq' 'new-project'
+  ```
