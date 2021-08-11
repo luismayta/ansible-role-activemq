@@ -1,45 +1,92 @@
-.PHONY: build deploy lint test functions help
+#
+# See ./docs/contributing.md
+#
+
+OS := $(shell uname)
+
+.PHONY: help
 .DEFAULT_GOAL := help
 
+HAS_PIP := $(shell command -v pip;)
+HAS_PIPENV := $(shell command -v pipenv;)
+
+ifdef HAS_PIPENV
+	PIPENV_RUN:=pipenv run
+	PIPENV_INSTALL:=pipenv install
+else
+	PIPENV_RUN:=
+	PIPENV_INSTALL:=
+endif
+
+TEAM := hadenlabs
+REPOSITORY_DOMAIN:=github.com
+REPOSITORY_OWNER:=${TEAM}
+AWS_VAULT ?= ${TEAM}
+PROJECT := ansible-role-activemq
+
+PYTHON_VERSION=3.8.0
+NODE_VERSION=14.16.1
+PYENV_NAME="${PROJECT}"
+GIT_IGNORES:=python,node,go,terraform,ansible
+GIT_IGNORES_CUSTOM:= bin \
+	bin
+GI:=gi
+
+# issues reviewers
+REVIEWERS?=luismayta
+
 # Configuration.
-SHELL = /bin/bash
-ROOT_DIR = $(shell pwd)
-SCRIPT_DIR = $(ROOT_DIR)/script
+SHELL ?=/bin/bash
+ROOT_DIR=$(shell pwd)
+MESSAGE:=🍺️
+MESSAGE_HAPPY?:="Done! ${MESSAGE}, Now Happy Hacking"
+SOURCE_DIR=$(ROOT_DIR)
+PROVISION_DIR:=$(ROOT_DIR)/provision
+DOCS_DIR:=$(ROOT_DIR)/docs
+README_TEMPLATE:=$(PROVISION_DIR)/templates/README.tpl.md
 
-# Bin scripts
-CLEAN = $(shell) $(SCRIPT_DIR)/clean.sh
-PYENV = $(shell) $(SCRIPT_DIR)/pyenv.sh
-SETUP = $(shell) $(SCRIPT_DIR)/setup.sh
-INSTALL = $(shell) $(SCRIPT_DIR)/install.sh
-LINTCODE = $(shell) $(SCRIPT_DIR)/lintcode.sh
-TEST = $(shell) $(SCRIPT_DIR)/test.sh
+export README_FILE ?= README.md
+export README_YAML ?= provision/generators/README.yaml
+export README_INCLUDES ?= $(file://$(shell pwd)/?type=text/plain)
 
-clean: ## Clean files unnecesary
-	$(CLEAN)
+FILE_README:=$(ROOT_DIR)/README.md
 
+include provision/make/*.mk
 
+## Display help for all targets
+.PHONY: help
+help:
+	@echo '${MESSAGE} Makefile for ${PROJECT}'
+	@echo ''
+	@awk '/^.PHONY: / { \
+		msg = match(lastLine, /^## /); \
+			if (msg) { \
+				cmd = substr($$0, 9, 100); \
+				msg = substr(lastLine, 4, 1000); \
+				printf "  ${GREEN}%-30s${RESET} %s\n", cmd, msg; \
+			} \
+	} \
+	{ lastLine = $$0 }' $(MAKEFILE_LIST)
 
-environment: ## Install Environment
-	$(PYENV)
-	$(INSTALL)
+## Create README.md by building it from README.yaml
+.PHONY: readme
+readme:
+	@gomplate --file $(README_TEMPLATE) \
+		--out $(README_FILE)
 
+## setup dependences of project
+.PHONY: setup
+setup:
+	@echo "==> install packages..."
+	make python.setup
+	make python.precommit
+	@[ -e ".env" ] || cp -rf .env.example .env
+	make git.setup
+	@echo ${MESSAGE_HAPPY}
 
-install:
-	$(INSTALL)
-
-
-roles: ## Update roles ansible
-	$(ROLES_ANSIBLE)
-
-
-lintcode: ## lint to code
-	$(LINTCODE)
-
-
-test: ## Test project
-	$(TEST)
-
-
-help: ## Show help text
-	@echo "Commands:"
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "    \033[36m%-20s\033[0m %s\n", $$1, $$2}'
+## setup environment of project
+.PHONY: environment
+environment:
+	@echo "==> loading virtualenv ${PYENV_NAME}..."
+	make python.environment
+	@echo ${MESSAGE_HAPPY}

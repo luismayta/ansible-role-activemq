@@ -1,64 +1,70 @@
--   repo: git@github.com:pre-commit/pre-commit-hooks
-    sha: v0.9.1
+default_stages:
+  - commit
+
+repos:
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.1.0
     hooks:
-    -   id: detect-private-key
+      - id: codespell
+        args: [--ignore-words=.codespell-ignores]
+        exclude: >
+          (?x)^(
+            .+\.vendor\/.*$|
+            .+\.node_modules\/.*$|
+            .+\.lock$|
+          )$
+  - repo: https://github.com/alessandrojcm/commitlint-pre-commit-hook
+    rev: v5.0.0
+    hooks:
+      - id: commitlint
+        stages: [commit-msg]
+        additional_dependencies: ['@hadenlabs/commitlint-config']
+        args:
+          - --config=.github/linters/.commitlintrc.json
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: detect-private-key
         files: ^(?!\.?git-crypt)
-    -   id: check-merge-conflict
-    -   id: trailing-whitespace
-        language_version: python3
-        files: ^tf|-|\.(py|tfvars|tf|tfenv|env|yml|yaml|pem|key|mock)$
-    -   id: end-of-file-fixer
-        files: ^tf|-|\.(py|tfvars|tf|tfenv|env|yml|yaml|pem|key|mock)$
-        language_version: python3
-    -   id: check-added-large-files
+        exclude: >
+          (?x)^(
+            .+\.gitleaks.toml$|
+          )$
+      - id: check-merge-conflict
+      - id: check-added-large-files
         files: ^tf|-|\.(py|env|yml|yaml)$
-    -   id: check-case-conflict
-    -   id: check-json
-        language_version: python3
-    -   id: check-xml
-        language_version: python3
-    -   id: check-yaml
-        language_version: python3
-    -   id: check-case-conflict
-    -   id: check-ast
-        language_version: python3
-    -   id: debug-statements
-    -   id: autopep8-wrapper
+      - id: check-case-conflict
+      - id: check-json
+      - id: check-xml
+      - id: check-yaml
+      - id: check-byte-order-marker
+      - id: check-ast
+      - id: debug-statements
+      - id: check-docstring-first
+      - id: requirements-txt-fixer
+      - id: check-symlinks
+      - id: file-contents-sorter
+      - id: fix-encoding-pragma
+      - id: sort-simple-yaml
+  - repo: https://github.com/hadenlabs/pre-commit-hooks
+    rev: 32eda4af34084f4e03d83a75b0ae3d2b91b45246
+    hooks:
+      - id: do-not-commit
+      - id: markdown-link-check
         args:
-        - -i
-        - --ignore=E501
-        language_version: python3
-    -   id: double-quote-string-fixer
-    -   id: check-docstring-first
-    -   id: pretty-format-json
-    -   id: debug-statements
-    -   id: requirements-txt-fixer
-    -   id: name-tests-test
--   repo: git://github.com/pre-commit/mirrors-pylint
-    sha: v1.7.2
-    hooks:
-    -   id: pylint
-        language_version: python3
+          - --config=.github/linters/markdown-link-config.json
+        exclude: \.tpl.md$
+      - id: shellcheck
+        exclude: >
+          (?x)^(
+            .+\.provision/git/hooks/prepare-commit-msg$|
+            .+\.tpl.sh$|
+          )$
         args:
-        - --rcfile=.pylintrc
-        exclude: setup.py
--   repo: git://github.com/pre-commit/mirrors-scss-lint
-    sha: v0.54.0
-    hooks:
-    -   id: scss-lint
-        files: \.(scss)$
--   repo: git@github.com:pre-commit/pre-commit
-    sha: v0.15.2
-    hooks:
-    -   id: validate_config
-    -   id: validate_manifest
--   repo: git://github.com/FalconSocial/pre-commit-python-sorter
-    sha: 1.0.4
-    hooks:
-    -   id: python-import-sorter
+          - --exclude=SC1072,SC1073,SC2068
+      - id: todocheck
+      - id: gitleaks
         args:
-        - --silent-overwrite
--   repo: git://github.com/detailyang/pre-commit-shell
-    sha: 1.0.1
-    hooks:
-    -   id: shell-lint
+          - --path=.
+          - --repo-config-path=.github/linters/.gitleaks.toml
+          - --verbose
